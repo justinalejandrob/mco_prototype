@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom'; // Vital para evitar el 404 en Vercel
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 
@@ -32,7 +33,7 @@ const RecentWork = () => {
   };
 
   return (
-    <section className="py-32 bg-slate-950 relative overflow-hidden">
+    <section className="py-32 bg-slate-950 relative overflow-hidden font-sans">
       {/* Decoración de fondo minimalista */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       
@@ -49,9 +50,10 @@ const RecentWork = () => {
               Trabajos <span className="font-semibold text-white/90">Recientes</span>
             </h2>
           </div>
-          <a href="/proyectos" className="group flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-amber-500 transition-all duration-300">
+          {/* ✅ Corregido: Uso de Link en lugar de <a> */}
+          <Link to="/proyectos" className="group flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-amber-500 transition-all duration-300">
             Ver portafolio completo <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" />
-          </a>
+          </Link>
         </div>
 
         {/* Grid de Proyectos Estilo Galería */}
@@ -81,14 +83,13 @@ const RecentWork = () => {
                 <h4 className="text-white text-xl font-medium tracking-tight uppercase">{project.title}</h4>
               </div>
               
-              {/* Línea de acento inferior en hover */}
               <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-amber-500 group-hover:w-full transition-all duration-700" />
             </motion.div>
           ))}
         </div>
       </div>
 
-      {/* LIGHTBOX EMERGENTE - DISEÑO ARQUITECTÓNICO */}
+      {/* LIGHTBOX EMERGENTE */}
       <AnimatePresence>
         {selectedId && selectedProject && (
           <motion.div 
@@ -96,31 +97,39 @@ const RecentWork = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedId(null)}
-            className="fixed inset-0 z-[100] bg-slate-950/98 backdrop-blur-md flex items-center justify-center p-4 md:p-12"
+            className="fixed inset-0 z-[100] bg-slate-950/98 backdrop-blur-xl flex items-center justify-center p-4 md:p-8"
           >
-            <button className="absolute top-10 right-10 text-white/30 hover:text-amber-500 transition-all z-[110]">
-              <X size={32} strokeWidth={1} />
+            {/* ✅ Botón X Optimizado: Más visible, fondo sólido y mejor contraste */}
+            <button 
+              onClick={() => setSelectedId(null)}
+              className="absolute top-6 right-6 md:top-10 md:right-10 w-12 h-12 flex items-center justify-center bg-amber-500 text-slate-950 rounded-full shadow-2xl hover:scale-110 transition-all z-[120]"
+              aria-label="Cerrar"
+            >
+              <X size={28} strokeWidth={2.5} />
             </button>
 
-            <div className="relative w-full max-w-7xl flex flex-col lg:flex-row bg-transparent overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div 
+              className="relative w-full max-w-7xl flex flex-col lg:flex-row bg-slate-900/40 rounded-2xl overflow-hidden border border-white/10 shadow-3xl" 
+              onClick={e => e.stopPropagation()}
+            >
               
-              {/* Botones Navegación Minimalistas */}
+              {/* Navegación - Adaptada para móvil (sección inferior) */}
               <div className="absolute bottom-4 right-4 lg:bottom-10 lg:right-10 flex gap-4 z-50">
-                <button onClick={prevProject} className="w-14 h-14 border border-white/10 text-white flex items-center justify-center hover:bg-amber-500 hover:text-slate-950 transition-all">
-                  <ChevronLeft size={24} strokeWidth={1} />
+                <button onClick={prevProject} className="w-12 h-12 lg:w-14 lg:h-14 border border-white/20 bg-slate-950/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-amber-500 hover:text-slate-950 transition-all">
+                  <ChevronLeft size={24} strokeWidth={1.5} />
                 </button>
-                <button onClick={nextProject} className="w-14 h-14 border border-white/10 text-white flex items-center justify-center hover:bg-amber-500 hover:text-slate-950 transition-all">
-                  <ChevronRight size={24} strokeWidth={1} />
+                <button onClick={nextProject} className="w-12 h-12 lg:w-14 lg:h-14 border border-white/20 bg-slate-950/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-amber-500 hover:text-slate-950 transition-all">
+                  <ChevronRight size={24} strokeWidth={1.5} />
                 </button>
               </div>
 
-              {/* Imagen Principal */}
-              <div className="w-full lg:w-[65%] h-[50vh] lg:h-[70vh] relative overflow-hidden">
+              {/* Imagen Principal - Adaptada a altura móvil */}
+              <div className="w-full lg:w-[65%] h-[40vh] sm:h-[50vh] lg:h-[75vh] relative overflow-hidden">
                 <motion.img 
                   key={selectedProject.img}
-                  initial={{ opacity: 0, scale: 1.1 }}
+                  initial={{ opacity: 0, scale: 1.05 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8 }}
+                  transition={{ duration: 0.6 }}
                   src={selectedProject.img} 
                   alt={selectedProject.title} 
                   className="w-full h-full object-cover" 
@@ -128,29 +137,29 @@ const RecentWork = () => {
               </div>
 
               {/* Info del Proyecto - Estilo Ficha Técnica */}
-              <div className="w-full lg:w-[35%] p-10 lg:p-20 bg-slate-900/50 flex flex-col justify-center border-y lg:border-y-0 lg:border-l border-white/5">
-                <div className="mb-10">
-                  <span className="text-amber-500 font-bold uppercase tracking-[0.5em] text-[10px] mb-4 block">Ficha de Proyecto</span>
-                  <h3 className="text-white text-4xl lg:text-5xl font-light uppercase tracking-tighter leading-[0.9] mb-4">
+              <div className="w-full lg:w-[35%] p-8 lg:p-16 bg-slate-900 flex flex-col justify-center border-t lg:border-t-0 lg:border-l border-white/10">
+                <div className="mb-6 lg:mb-10">
+                  <span className="text-amber-500 font-bold uppercase tracking-[0.5em] text-[9px] mb-3 block">Ficha Técnica</span>
+                  <h3 className="text-white text-3xl lg:text-5xl font-light uppercase tracking-tighter leading-tight mb-4">
                     {selectedProject.title.split(' ')[0]} <br />
-                    <span className="font-bold">{selectedProject.title.split(' ').slice(1).join(' ')}</span>
+                    <span className="font-bold text-amber-50/90">{selectedProject.title.split(' ').slice(1).join(' ')}</span>
                   </h3>
                 </div>
                 
-                <div className="space-y-8">
-                  <p className="text-slate-400 text-sm lg:text-base leading-relaxed font-light italic border-l border-amber-500/30 pl-6">
-                    "{selectedProject.desc}"
+                <div className="space-y-6">
+                  <p className="text-slate-300 text-sm lg:text-base leading-relaxed font-light italic border-l-2 border-amber-500/50 pl-5">
+                    {selectedProject.desc}
                   </p>
                   
-                  <div className="pt-8 border-t border-white/5">
-                    <div className="grid grid-cols-2 gap-4">
+                  <div className="pt-6 border-t border-white/5">
+                    <div className="grid grid-cols-2 gap-6">
                       <div>
-                        <span className="block text-[9px] uppercase tracking-widest text-slate-500 mb-1">Sector</span>
-                        <span className="text-white text-xs uppercase font-bold tracking-widest">{selectedProject.category}</span>
+                        <span className="block text-[8px] uppercase tracking-widest text-slate-500 mb-1">Sector</span>
+                        <span className="text-white text-[10px] lg:text-xs uppercase font-bold tracking-widest bg-white/5 px-2 py-1 rounded-sm">{selectedProject.category}</span>
                       </div>
                       <div>
-                        <span className="block text-[9px] uppercase tracking-widest text-slate-500 mb-1">Ubicación</span>
-                        <span className="text-white text-xs uppercase font-bold tracking-widest">Ecuador</span>
+                        <span className="block text-[8px] uppercase tracking-widest text-slate-500 mb-1">Ubicación</span>
+                        <span className="text-white text-[10px] lg:text-xs uppercase font-bold tracking-widest">Amazonía, EC</span>
                       </div>
                     </div>
                   </div>

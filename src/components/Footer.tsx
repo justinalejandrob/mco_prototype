@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'; // Importación vital para evitar el 404
 import { 
   Youtube, 
   Facebook, 
@@ -46,33 +47,34 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           
-          {/* Columna 1: Somos */}
+          {/* Columna 1: Somos (Rutas Internas) */}
           <div>
-  <h5 className="text-white font-black uppercase tracking-[0.2em] text-[11px] mb-8 flex items-center gap-2">
-    <span className="w-6 h-[1px] bg-orange-400"></span> Somos
-  </h5>
-  <ul className="space-y-4 text-sm font-medium">
-    {[
-      { name: 'Asociación', path: '/asociacion' },
-      { name: 'Misión', path: '/mision' },
-      { name: 'Visión', path: '/vision' },
-      { name: 'Sostenibilidad', path: '/sostenibilidad' }
-    ].map((item) => (
-      <li key={item.name}>
-        <a 
-          href={item.path} 
-          className="hover:text-orange-400 transition-colors flex items-center gap-2 group"
-        >
-          <ArrowRight 
-            size={12} 
-            className="opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all text-orange-400" 
-          />
-          {item.name}
-        </a>
-      </li>
-    ))}
-  </ul>
-</div>
+            <h5 className="text-white font-black uppercase tracking-[0.2em] text-[11px] mb-8 flex items-center gap-2">
+              <span className="w-6 h-[1px] bg-orange-400"></span> Somos
+            </h5>
+            <ul className="space-y-4 text-sm font-medium">
+              {[
+                { name: 'Asociación', path: '/asociacion' },
+                { name: 'Misión', path: '/mision' },
+                { name: 'Visión', path: '/vision' },
+                { name: 'Sostenibilidad', path: '/sostenibilidad' }
+              ].map((item) => (
+                <li key={item.name}>
+                  {/* ✅ Corregido: Uso de Link para navegación interna */}
+                  <Link 
+                    to={item.path} 
+                    className="hover:text-orange-400 transition-colors flex items-center gap-2 group"
+                  >
+                    <ArrowRight 
+                      size={12} 
+                      className="opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all text-orange-400" 
+                    />
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           {/* Columna 2: Trabajos */}
           <div>
@@ -115,13 +117,12 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Columna 4: Ubicación */}
+          {/* Columna 4: Ubicación (Enlace Externo) */}
           <div>
             <h5 className="text-white font-black uppercase tracking-[0.2em] text-[11px] mb-8 flex items-center gap-2">
               <span className="w-6 h-[1px] bg-orange-400"></span> Ubícanos
             </h5>
             <div className="bg-white/[0.02] p-6 rounded-sm border border-white/5 relative group overflow-hidden">
-              {/* Decoración sutil */}
               <div className="absolute top-0 right-0 w-20 h-20 bg-orange-400/5 -mr-10 -mt-10 rounded-full group-hover:scale-150 transition-transform duration-700" />
               
               <address className="not-italic text-sm leading-relaxed mb-6 font-light">
@@ -129,8 +130,11 @@ const Footer = () => {
                 Provincia de Orellana<br />
                 Cantón La Joya de los Sachas
               </address>
+              {/* ✅ Mantenemos <a> porque es un link externo a Maps */}
               <a 
-                href="https://www.google.com/maps?ll=-0.282988,-76.854487&z=16&t=m&hl=es-419&gl=EC&mapclient=embed" 
+                href="https://maps.google.com" 
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center gap-2 text-[10px] font-black text-orange-400 hover:text-white transition-colors uppercase tracking-[0.2em]"
               >
                 <MapPin size={14} /> Mapa de Ubicación
@@ -159,7 +163,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Social Networks Icons */}
+          {/* Redes Sociales (Enlaces Externos) */}
           <div className="flex gap-3">
             {socialLinks.map((social, i) => (
               <a 
