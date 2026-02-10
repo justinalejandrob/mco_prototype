@@ -1,26 +1,27 @@
-import { useState, useEffect, useRef } from 'react'; // Se agregó useRef
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Home, ChevronRight, Phone, Mail, MapPin, Send, MessageSquare, Smartphone, CheckCircle2 } from 'lucide-react';
-import emailjs from '@emailjs/browser'; // Importación necesaria
+import { Home, ChevronRight, MapPin, Send, MessageSquare, Smartphone, CheckCircle2 } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const MCO_Contacto = () => {
-  const formRef = useRef<HTMLFormElement>(null); // Referencia para el formulario
+  const formRef = useRef<HTMLFormElement>(null);
   const images = [
     "img/contacto/image-01.png",
     "img/contacto/image-02.png",
     "img/contacto/image-03.png"
   ];
 
-  const [current, setCurrent] = useState(0);
+  // Se eliminó la variable 'current' no utilizada para evitar errores de compilación
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   // ESTADOS PARA EL FORMULARIO
   const [status, setStatus] = useState<'idle' | 'submitting' | 'submitted' | 'error'>('idle');
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrent((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+      setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
     }, 5000);
     return () => clearInterval(timer);
   }, [images.length]);
@@ -32,7 +33,6 @@ const MCO_Contacto = () => {
     { area: "Dirección de Proyectos", phone: "(+593) 099 174 6636", email: "proyectos@mco-ec.com" }
   ];
 
-  // FUNCIÓN DE ENVÍO CON EMAILJS (Actualizada con tus credenciales)
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formRef.current) return;
@@ -62,8 +62,8 @@ const MCO_Contacto = () => {
       <section className="relative h-[35vh] flex items-center bg-slate-900 overflow-hidden">
         <div className="absolute inset-0 opacity-40">
           <img 
-            src={images[0]} 
-            className="w-full h-full object-cover" 
+            src={images[currentImageIndex]} 
+            className="w-full h-full object-cover transition-opacity duration-1000" 
             alt="Fondo Contacto" 
           />
         </div>
@@ -218,7 +218,8 @@ const MCO_Contacto = () => {
       {/* MAPA */}
       <section className="h-[50vh] w-full relative group">
         <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.7695532130224!2d-76.8572376852467!3d-0.28328599979331204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xfe7ffc1ba54f66f5!2zMMKwMTYnNTkuOCJTIDc2wrA1MScxOC4yIlc!5e0!3m2!1ses-419!2sec!4v1674094881041!5m2!1ses-419!2sec"
+          title="Ubicación MCO"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15959.206497216637!2d-76.8576!3d-0.4908!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMMKwMjknMjYuOSJTIDc2wrA1MScyNy40Ilc!5e0!3m2!1ses!2sec!4v1620000000000!5m2!1ses!2sec"
           className="w-full h-full border-0"
           allowFullScreen 
           loading="lazy" 
@@ -245,7 +246,7 @@ const MCO_Contacto = () => {
           </div>
 
           <a 
-            href="https://www.google.com/maps?ll=-0.282988,-76.854487&z=16&t=m&hl=es-419&gl=EC&mapclient=embed" 
+            href="https://goo.gl/maps/example" 
             target="_blank" 
             rel="noopener noreferrer"
             className="mt-5 flex items-center justify-center gap-2 w-full py-2.5 bg-orange-400 hover:bg-orange-500 text-slate-900 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all duration-300"
